@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>内容比较测试页</title>
+    <style>
+        .mteditor-root,
+        .compare-root {
+            min-width: 800px;
+            max-width: 1200px;
+            margin: 0 auto;
+            font-size: 14px;
+            line-height: 1.5;
+            font-family: 'helvetica neue', arial, 'hiragino sans gb', stheiti, 'wenquanyi micro hei', sans-serif;
+        }
+
+        .compare-root {
+            margin-bottom: 20px;
+        }
+
+        .margin-left-10px {
+            margin-left: 10px;
+        }
+
+        .compare-title,
+        .compare-body {
+            display: flex;
+            align-items: center;
+        }
+
+        .compare-textarea {
+            width: 45%;
+            height: 200px;
+            resize: none;
+        }
+
+        .mteditor-toolbar {
+            height: 40px;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background-color: #fafafa;
+        }
+
+        .mteditor-body {
+            padding: 20px;
+            background-color: #eee;
+        }
+
+        .mteditor-body-header,
+        .mteditor-body-footer,
+        .mteditor-body-content {
+            background: white;
+            position: relative;
+            overflow: hidden !important;
+        }
+
+        .mteditor-body-header::before,
+        .mteditor-body-footer::before {
+            height: 1px;
+            z-index: 1;
+            position: absolute;
+            width: calc(100% - 2*var(--ck-spacing-standard));
+            border-top: dashed 1px #ccc;
+            content: ' ';
+        }
+
+        .mteditor-body-header::before {
+            top: calc(100% - 1px);
+        }
+
+        .mteditor-body-footer::before {
+            top: 0;
+        }
+
+        .mteditor-body-content {
+            min-height: 800px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="compare-root">
+        <div class="compare-title">
+            <h3>内容比较测试</h3>
+            <select class="margin-left-10px compare-select">
+                <option>快捷测试选项</option>
+                <option value="d2">文本与文本</option>
+                <option value="d7">ck feedback</option>
+                <option value="d8">新在旧文本中间</option>
+                <option value="d9">旧无新有</option>
+                <option value="d10">长文本</option>
+                <option value="d11">文本属性</option>
+                <option value="d12">文本属性2</option>
+                <option value="d13">文本中间</option>
+                <option value="d17">插入文本</option>
+                <!-- <option value="d1">组件与文本</option> -->
+                <option value="d3">图片与图片</option>
+                <option value="d4">文本与图片</option>
+                <option value="d5">图片与文本</option>
+                <!-- <option value="d6">组件与组件</option> -->
+                <option value="d14">表格</option>
+                <option value="d15">表格2</option>
+                <option value="d16">表格3</option>
+                <option value="d18">表格4</option>
+                <option value="d19">分页符</option>
+            </select>
+        </div>
+        <div class="compare-body">
+            <textarea class="compare-textarea compare-left-textarea" placeholder="修改前的html片断"></textarea>
+            <textarea class="compare-textarea margin-left-10px compare-right-textarea"
+                placeholder="修改后的html片断"></textarea>
+            <button class="margin-left-10px start-compare-button">开始比较</button>
+        </div>
+    </div>
+    <div class="mteditor-root">
+        <div class="mteditor-toolbar"></div>
+        <div class="mteditor-body">
+            <div class="mteditor-body-header"></div>
+            <div class="mteditor-body-content"></div>
+            <div class="mteditor-body-footer"></div>
+        </div>
+    </div>
+    <script src="./build/mteditor.js"></script>
+    <script>
+        let builtinCompareData = {
+            d1: {
+                from: '<p><span class="qfill-date-placeholder" data-date="{&quot;fmt&quot;:&quot;yyyy/MM/dd&quot;}">&nbsp;</span></p>',
+                to: '<p>adf</p><p>bbbb</p><p>123</p>'
+            },
+            d2: {
+                from: '<p>123<b>456</b>有一个美丽的新世界</p><p>叫我慢慢带走</p><p>海浪它总是一波波</p>',
+                to: '<p>123</p><p>new line</p><p>叫我慢慢的走</p><p>another new line</p><p>海浪它总是一波波</p><p>不要停歇不回头</p>'
+            },
+            d3: {
+                from: '<img src="https://img.alicdn.com/tfs/TB1H83oRsfpK1RjSZFOXXa6nFXa-152-152.png"/>',
+                to: '<img src="//www.baidu.com/img/PCfb_5bf082d29588c07f842ccde3f97243ea.png"/>'
+            },
+            d4: {
+                from: '<img src="https://img.alicdn.com/tfs/TB1H83oRsfpK1RjSZFOXXa6nFXa-152-152.png"/>',
+                to: '<p>new text</p>'
+            },
+            d5: {
+                from: '<p>new text</p>',
+                to: '<img src="https://img.alicdn.com/tfs/TB1H83oRsfpK1RjSZFOXXa6nFXa-152-152.png"/>'
+            },
+            d6: {
+                from: '<p><span class="qfill-date-placeholder" data-date="{&quot;fmt&quot;:&quot;yyyy/MM/dd&quot;}">&nbsp;</span></p>',
+                to: '<p>123</p><p><span class="qfill-date-placeholder" data-date="{&quot;fmt&quot;:&quot;yyyy/MM/dd&quot;}">&nbsp;</span></p>'
+            },
+            d7: {
+                from: '<p>this is some codes here:</p>',
+                to: '<p>this is code snippet:</p>'
+            },
+            d8: {
+                from: '<p>123</p><p>456</p><p>aaa</p>',
+                to: '<p>456</p>'
+            },
+            d9: {
+                from: '<p>456</p>',
+                to: '<p>123</p><p>456</p><p>aaa</p>'
+            },
+            d10: {
+                from: '<p>456</p><p>123</p><p>456</p><p>aaa</p><p>456</p><p>123</p><p>456</p><p>aaa</p><p>456</p><p>123</p><p>456</p><p>aaa</p><p>456</p><p>123</p><p>456</p><p>aaa</p><p>456</p><p>123</p><p>456</p><p>aaa</p>',
+                to: '<p>123</p><p>456</p><p>aaa</p><p>123</p><p>456</p><p>aaa</p><p>123</p><p>456</p><p>aaa</p><p>123</p><p>456</p><p>aaa</p><p>123</p><p>456</p><p>aaa</p><p>123</p><p>456</p><p>aaa</p><p>123</p><p>456</p><p>aaa</p>'
+            },
+            d11: {
+                from: '<p>123<b>bold text</p>',
+                to: '<p>124345<i>italic text</p>'
+            },
+            d12: {
+                from: '<p>124345<i>italic text</p>',
+                to: '<p>123<b>bold text</p>'
+            },
+            d13: {
+                from: '<p>acdb</p>',
+                to: '<p>aefb</p>'
+            },
+            d14: {
+                from: '<figure class="table"><table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>',
+                to: '<figure class="table"><table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td colspan="2">&nbsp;</td></tr></tbody></table></figure>'
+            },
+            d15: {
+                from: '<figure class="table"><table><tbody><tr><td>45</td><td>aaaaa</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>',
+                to: '<figure class="table"><table><tbody><tr><td>123</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>456</td></tr></tbody></table></figure>',
+            },
+            d16: {
+                from: '<figure class="table"><table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>',
+                to: '<figure class="table"><table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>'
+            },
+            d17: {
+                from: '<p>19</p>',
+                to: '<p>abc18</p>'
+            },
+            d18: {
+                from: '<figure class="table"><table><tbody><tr><td>45</td><td>aaaaa</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>',
+                to: '<figure class="table"><table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td colspan="2">&nbsp;</td></tr></tbody></table></figure>'
+            },
+            d19: {
+                from: '<p>&nbsp;</p><p>zzz</p><div class="page-break" style="page-break-after:always;"><span style="display:none;">&nbsp;</span></div><p>123</p>',
+                to: '中文'
+            }
+        };
+        let compareOptions = {
+            textSameRatio: 0.7,
+            deleteBeforeAdded: true,
+            byChar: true
+        };
+        MagicalTextEditor.create({
+            header: document.querySelector('.mteditor-body-header'),
+            content: document.querySelector('.mteditor-body-content'),
+            footer: document.querySelector('.mteditor-body-footer')
+        }, {
+            mteditor: {
+                compare: compareOptions
+            }
+        }).then(editor => {
+            let toolbarNode = document.querySelector('.mteditor-toolbar');
+            if (toolbarNode) {
+                toolbarNode.appendChild(editor.ui.view.toolbar.element);
+            }
+            window.editor = editor;
+            let fillCompareData = () => {
+                let selectNode = document.querySelector('.compare-select');
+                let options = selectNode.options;
+                let index = selectNode.selectedIndex;
+                let value = options[index].value;
+                let dest = builtinCompareData[value];
+                let leftTextarea = document.querySelector('.compare-left-textarea');
+                let rightTextarea = document.querySelector('.compare-right-textarea');
+                if (dest) {
+                    leftTextarea.value = dest.from;
+                    rightTextarea.value = dest.to;
+                } else {
+                    leftTextarea.value = rightTextarea.value = '';
+                }
+            };
+            fillCompareData();
+            let selectNode = document.querySelector('.compare-select');
+            selectNode.addEventListener('change', fillCompareData);
+            let startCompare = () => {
+                let leftTextarea = document.querySelector('.compare-left-textarea');
+                let rightTextarea = document.querySelector('.compare-right-textarea');
+                editor.setCompareData({
+                    older: {
+                        content: leftTextarea.value
+                    },
+                    newer: {
+                        content: rightTextarea.value
+                    }
+                });
+            };
+            let startComapreButton = document.querySelector('.start-compare-button');
+            startComapreButton.addEventListener('click', startCompare);
+        });
+    </script>
+
+</body>
+
+</html>

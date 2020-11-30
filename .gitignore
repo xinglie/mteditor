@@ -1,0 +1,9 @@
+.DS_Store
+node_modules
+compare-debug.html
+webpack.config.js
+package.json
+package-lock.json
+src/
+plugins/
+build/translations
