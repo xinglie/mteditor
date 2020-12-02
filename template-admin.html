@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>组件测试页</title>
+    <style>
+        .mteditor-root {
+            min-width: 800px;
+            max-width: 1200px;
+            margin: 0 auto;
+            font-size: 14px;
+            line-height: 1.5;
+            font-family: 'helvetica neue', arial, 'hiragino sans gb', stheiti, 'wenquanyi micro hei', sans-serif;
+        }
+
+        .mteditor-toolbar {
+            height: 40px;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background-color: #fafafa;
+        }
+
+        .mteditor-body {
+            padding: 20px;
+            background-color: #eee;
+        }
+
+        .mteditor-body-header,
+        .mteditor-body-footer,
+        .mteditor-body-content {
+            background: white;
+            position: relative;
+            overflow: hidden !important;
+        }
+
+        .mteditor-body-header::before,
+        .mteditor-body-footer::before {
+            height: 1px;
+            z-index: 1;
+            position: absolute;
+            width: calc(100% - 2*var(--ck-spacing-standard));
+            border-top: dashed 1px #ccc;
+            content: ' ';
+        }
+
+        .mteditor-body-header::before {
+            top: calc(100% - 1px);
+        }
+
+        .mteditor-body-footer::before {
+            top: 0;
+        }
+
+        .mteditor-body-content {
+            min-height: 800px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mteditor-root">
+        <div class="mteditor-toolbar"></div>
+        <div class="mteditor-body">
+            <div class="mteditor-body-header"></div>
+            <div class="mteditor-body-content"></div>
+            <div class="mteditor-body-footer"></div>
+        </div>
+    </div>
+    <script src="./build/mteditor-admin.js"></script>
+    <script>
+        MagicalTextEditor.create({
+            header: document.querySelector('.mteditor-body-header'),
+            content: document.querySelector('.mteditor-body-content'),
+            footer: document.querySelector('.mteditor-body-footer')
+        }, {
+            typing: {
+                transformations: {
+                    extra: [{
+                        from: 'kwwl',
+                        to: '中华人民共和国'
+                    }, {
+                        from: '+1',
+                        to: '👍'
+                    }]
+                }
+            }
+        }).then(editor => {
+            let toolbarNode = document.querySelector('.mteditor-toolbar');
+            if (toolbarNode) {
+                toolbarNode.appendChild(editor.ui.view.toolbar.element);
+            }
+            window.editor = editor;
+        });
+    </script>
+
+</body>
+
+</html>
