@@ -21,4 +21,4 @@
 
 用户使用测试页面：https://xinglie.gitee.io/mteditor/template-user.html
 
-分页打印测试页面：https://xinglie.github.io/mteditor/print.html
+分页打印测试页面：https://xinglie.gitee.io/mteditor/print.html
